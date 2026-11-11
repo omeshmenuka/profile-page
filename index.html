@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio of certificates, projects, homeworks, class activities and resume.">
+  <title>My Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #edf1f7; --surface: #ffffff; --ink: #0e1a33; --muted: #56657f;
+      --line: #d9e0ec; --accent: #2a4fe0; --on-accent: #ffffff; --tint: #e8edfd;
+      --gold: #8a5a00; --gold-bg: #fdf0d2; --count-on: rgba(255,255,255,.22);
+      --display: "Bricolage Grotesque", system-ui, sans-serif;
+      --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1222; --surface: #121c33; --ink: #e7ecf7; --muted: #93a1bd;
+        --line: #24324f; --accent: #8ba3ff; --on-accent: #0b1222; --tint: #1a2750;
+        --gold: #f2c35b; --gold-bg: #3a2c0c; --count-on: rgba(11,18,34,.22);
+      }
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--body); background: var(--bg); color: var(--ink);
+      line-height: 1.5; min-height: 100vh;
+      padding: clamp(28px, 6vw, 72px) 20px 56px;
+    }
+    .shell { max-width: 1000px; margin: 0 auto; }
+    header { margin-bottom: clamp(24px, 4vw, 44px); }
+    h1 {
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(2.4rem, 7vw, 4.2rem); line-height: 1; letter-spacing: -0.03em;
+    }
+    .lede { margin-top: 12px; color: var(--muted); font-size: 1.05rem; max-width: 46ch; }
+    .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 28px; align-items: start; }
+
+    .tabs { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 24px; }
+    .tab-btn {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      width: 100%; padding: 12px 14px; font: 500 1rem var(--body); color: var(--muted);
+      background: transparent; border: 0; border-radius: 10px; cursor: pointer;
+      text-align: left; white-space: nowrap; transition: background .15s, color .15s;
+    }
+    .tab-btn:hover { background: var(--tint); color: var(--ink); }
+    .tab-btn[aria-selected="true"] { background: var(--accent); color: var(--on-accent); }
+    .count {
+      font-size: .8rem; font-weight: 600; min-width: 24px; padding: 1px 8px;
+      border-radius: 99px; text-align: center; background: var(--line); color: var(--ink);
+    }
+    .tab-btn[aria-selected="true"] .count { background: var(--count-on); color: inherit; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    .panel {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 16px; padding: clamp(20px, 3vw, 32px);
+    }
+    .panel[hidden] { display: none; }
+    .panel.enter { animation: enter .25s ease-out; }
+    @keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .panel-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      padding-bottom: 16px; margin-bottom: 8px; border-bottom: 1px solid var(--line);
+    }
+    h2 { font-family: var(--display); font-weight: 700; font-size: 1.6rem; letter-spacing: -0.02em; }
+    .meta { color: var(--muted); font-size: .9rem; }
+    .group { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 24px 0 8px; }
+    .group:first-of-type { margin-top: 16px; }
+
+    .list { list-style: none; display: flex; flex-direction: column; }
+    .list li + li { border-top: 1px solid var(--line); }
+    .list a {
+      display: flex; align-items: center; gap: 14px; padding: 14px 10px;
+      color: var(--ink); text-decoration: none; font-weight: 500; border-radius: 10px;
+      transition: background .15s, color .15s;
+    }
+    .list a:hover { background: var(--tint); color: var(--accent); }
+    .doc {
+      flex: none; width: 36px; height: 36px; padding: 8px; border-radius: 9px;
+      background: var(--tint); stroke: var(--accent); fill: none; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .name { flex: 1; min-width: 0; }
+    .ext {
+      flex: none; width: 18px; height: 18px; stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: .45;
+    }
+    .list a:hover .ext { opacity: 1; }
+    .tag {
+      flex: none; font-size: .78rem; font-weight: 600; padding: 2px 10px;
+      border-radius: 99px; background: var(--gold-bg); color: var(--gold);
+    }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .empty { color: var(--muted); padding: 20px 4px 8px; }
+
+    @media (max-width: 760px) {
+      .layout { grid-template-columns: 1fr; gap: 16px; }
+      .tabs { position: static; flex-direction: row; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab-btn { width: auto; flex: none; background: var(--surface); border: 1px solid var(--line); }
+      .tab-btn[aria-selected="true"] { border-color: var(--accent); }
+      .tag { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .panel.enter { animation: none; }
+      * { transition: none !important; }
+    }
+
+    /* Background artwork */
+    :root {
+      --pattern: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160' fill='none' stroke='%232a4fe0' stroke-opacity='.11' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M0 40h50l20 20h40M130 40h30M80 0v50l20 20M0 120h30l20-20M130 120h30M80 160v-20l-20-20M110 60v40h20'/><circle cx='110' cy='60' r='3.5' fill='%232a4fe0' fill-opacity='.16'/><circle cx='130' cy='100' r='3.5' fill='%232a4fe0' fill-opacity='.16'/><circle cx='50' cy='100' r='3.5' fill='%232a4fe0' fill-opacity='.16'/><circle cx='60' cy='120' r='3.5' fill='%232a4fe0' fill-opacity='.16'/></svg>");
+      --blob1: rgba(42, 79, 224, .16);
+      --blob2: rgba(20, 184, 166, .14);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --pattern: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160' fill='none' stroke='%238ba3ff' stroke-opacity='.11' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M0 40h50l20 20h40M130 40h30M80 0v50l20 20M0 120h30l20-20M130 120h30M80 160v-20l-20-20M110 60v40h20'/><circle cx='110' cy='60' r='3.5' fill='%238ba3ff' fill-opacity='.16'/><circle cx='130' cy='100' r='3.5' fill='%238ba3ff' fill-opacity='.16'/><circle cx='50' cy='100' r='3.5' fill='%238ba3ff' fill-opacity='.16'/><circle cx='60' cy='120' r='3.5' fill='%238ba3ff' fill-opacity='.16'/></svg>");
+        --blob1: rgba(139, 163, 255, .16);
+        --blob2: rgba(45, 212, 191, .10);
+      }
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(60vmax 60vmax at 0% 0%, var(--blob1), transparent 62%),
+        radial-gradient(55vmax 55vmax at 100% 100%, var(--blob2), transparent 62%),
+        var(--pattern);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .hero {
+      flex: none;
+      width: clamp(120px, 22vw, 190px);
+      height: auto;
+      color: var(--accent);
+    }
+    @media (max-width: 520px) { .hero { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <h1>My Portfolio</h1>
+        <p class="lede">Certificates, projects, schoolwork and resume, all in one place.</p>
+      </div>
+      <svg class="hero" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="60" y="60" width="80" height="80" rx="14" fill="var(--tint)"/>
+        <rect x="82" y="82" width="36" height="36" rx="8" fill="currentColor" stroke="none"/>
+        <path d="M76 60V44M100 60V30H128M124 60V44M76 140v16M100 140v30H72M124 140v16M60 76H44M60 100H30V72M60 124H44M140 76h16M140 100h30v28M140 124h16"/>
+        <g fill="var(--surface)">
+          <circle cx="128" cy="30" r="5"/><circle cx="72" cy="170" r="5"/>
+          <circle cx="30" cy="72" r="5"/><circle cx="170" cy="128" r="5"/>
+          <circle cx="76" cy="44" r="5"/><circle cx="124" cy="44" r="5"/>
+          <circle cx="76" cy="156" r="5"/><circle cx="124" cy="156" r="5"/>
+        </g>
+      </svg>
+    </header>
+
+    <div class="layout">
+      <div class="tabs" role="tablist" aria-label="Portfolio sections" aria-orientation="vertical">
+        <button class="tab-btn" role="tab" id="tab-certificates" aria-controls="certificates" aria-selected="true">Certificates <span class="count"></span></button>
+        <button class="tab-btn" role="tab" id="tab-projects" aria-controls="projects" aria-selected="false" tabindex="-1">Projects <span class="count"></span></button>
+        <button class="tab-btn" role="tab" id="tab-homeworks" aria-controls="homeworks" aria-selected="false" tabindex="-1">Homeworks <span class="count"></span></button>
+        <button class="tab-btn" role="tab" id="tab-activities" aria-controls="activities" aria-selected="false" tabindex="-1">Class Activities <span class="count"></span></button>
+        <button class="tab-btn" role="tab" id="tab-resume" aria-controls="resume" aria-selected="false" tabindex="-1">My Resume <span class="count"></span></button>
+      </div>
+
+      <main>
+        <section class="panel" id="certificates" role="tabpanel" aria-labelledby="tab-certificates">
+          <div class="panel-head"><h2>Certificates</h2><span class="meta"></span></div>
+        <h3 class="group">Security</h3>
+        <ul class="list">
+          <li><a href="https://drive.google.com/file/d/1xE7cLlIaXD56Cw5k5xjsyOdbq_S24XiY/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">CISSP Certification</span><span class="tag">Industry certification</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        <h3 class="group">Artificial intelligence</h3>
+        <ul class="list">
+          <li><a href="https://drive.google.com/file/d/1KlTf67hmf3uvmsjaAfuyMwx7AUBRRGrJ/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">AI Fundamentals Foundations</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1QijKKYgdwI4_Cpwl3puxzrngh_LxnBaj/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">AI Fundamentals Language and Vision</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1HfOoP6lopLetBp2GAYCyhRgIr4kBCblq/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">AI Literacy Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1QTfUQGyYrMjOtqxpmn-yX0hMHc3t270z/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">AI Customer Service Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/100jKqfIs7kZHz0vrvEHD4-r-Eqri3EIp/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">AI Fundamentals Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1K1Dy2rGXTbBSzJvUj7PX-OtTeipXZUXC/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Craft Precise Prompts Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/14I-_JrOuH7c7fw8rrHHnu4bYH9dDyvdt/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Explore Emerging Tech</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1XAMNrORTUfWv4MeeyT-FxwZOYvfaDX8p/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">LLMs Work with Data Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1z3IZZquyz6U3jS-Ew-BTU8c5lF-moD3K/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Getting Started with Generative AI</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1pPNlAEIGUbGVbQhunxUrYxvATtlACHkD/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Make Agentic AI Work for You</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/15CM98J4LpIj_G-kWK6TIRG84RUIyTaud/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Retrieval Augmented Generation for Enhanced</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        <h3 class="group">Web development</h3>
+        <ul class="list">
+          <li><a href="https://drive.google.com/file/d/1Uw3tr2dNMtcwFYQwnR4aIE0b9X-lGEkI/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Advanced HTML CSS Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1-ABlrlVxExa8qpVKUNIA7n1ke6aD5iWI/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Intermediate HTML CSS Odin Project</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1GFW8GgGMYazdawG9GZgAqwcyPXnzNS4_/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">JavaScript Concepts Skills</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        </section>
+        <section class="panel" id="projects" role="tabpanel" aria-labelledby="tab-projects" hidden>
+          <div class="panel-head"><h2>Projects</h2><span class="meta"></span></div>
+        <ul class="list">
+          <li><a href="https://drive.google.com/file/d/1LSC41jbn_N3IEh4jqxCxCt0m72VsN633/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Fire Extinguisher Robot</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://omeshmenuka.github.io/tic-toc-toe/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Tic Tac Toe</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://omeshmenuka.github.io/odin-sign-up-form/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Sign Up Form</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        </section>
+        <section class="panel" id="homeworks" role="tabpanel" aria-labelledby="tab-homeworks" hidden>
+          <div class="panel-head"><h2>Homeworks</h2><span class="meta"></span></div>
+        <ul class="list">
+          <!-- Add homework links here, one list item per link:
+          <li><a href="YOUR_LINK" target="_blank" rel="noopener">Title</a></li>
+          -->
+          <li><a href="https://omeshmenuka.github.io/Html-tags/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Html Tags</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1O-1qU9vANgUE8R8QWXSiVKkWCtGlkpQ9/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Odin Project Foundation Screen Recording</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/1jFXiZchpag_I9zqrjPA3SgFRruqpBgsH/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Odin Project JavaScript Screen Recording</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://omeshmenuka.github.io/CSS-Tags/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Learning CSS</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://drive.google.com/file/d/17h85Zq0_evKfwjo9mf34g51dZb5pRbua/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Advance Html and Css Presentation Recording</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        </section>
+        <section class="panel" id="activities" role="tabpanel" aria-labelledby="tab-activities" hidden>
+          <div class="panel-head"><h2>Class Activities</h2><span class="meta"></span></div>
+        <ul class="list">
+          <!-- Add class activity links here, one list item per link:
+          <li><a href="YOUR_LINK" target="_blank" rel="noopener">Title</a></li>
+          -->
+          <li><a href="https://omeshmenuka.github.io/First-Web-page/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">First Web Page</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+          <li><a href="https://omeshmenuka.github.io/class-activity/" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">Html Practice</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        </section>
+        <section class="panel" id="resume" role="tabpanel" aria-labelledby="tab-resume" hidden>
+          <div class="panel-head"><h2>My Resume</h2><span class="meta"></span></div>
+        <ul class="list">
+          <li><a href="https://drive.google.com/file/d/1XXPhAOVEJF0IdN_iCa10HAnpfVVQNAKa/view?usp=sharing" target="_blank" rel="noopener"><svg class="doc" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5"/></svg><span class="name">View My Resume</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span class="sr">(opens in a new tab)</span></a></li>
+        </ul>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      var panels = Array.prototype.slice.call(document.querySelectorAll('[role="tabpanel"]'));
+
+      panels.forEach(function (p) {
+        var n = p.querySelectorAll('.list li').length;
+        document.getElementById('tab-' + p.id).querySelector('.count').textContent = n;
+        p.querySelector('.meta').textContent = n === 0 ? 'No items yet' : n + (n === 1 ? ' item' : ' items');
+      });
+
+      function show(id, focus, animate) {
+        tabs.forEach(function (t) {
+          var on = t.getAttribute('aria-controls') === id;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          if (on && focus) t.focus();
+        });
+        panels.forEach(function (p) {
+          var on = p.id === id;
+          p.hidden = !on;
+          p.classList.remove('enter');
+          if (on && animate) { void p.offsetWidth; p.classList.add('enter'); }
+        });
+      }
+
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () {
+          var id = t.getAttribute('aria-controls');
+          show(id, false, true);
+          history.replaceState(null, '', '#' + id);
+        });
+        t.addEventListener('keydown', function (e) {
+          var next = null;
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+          if (e.key === 'Home') next = 0;
+          if (e.key === 'End') next = tabs.length - 1;
+          if (next !== null) {
+            e.preventDefault();
+            var id = tabs[next].getAttribute('aria-controls');
+            show(id, true, true);
+            history.replaceState(null, '', '#' + id);
+          }
+        });
+      });
+
+      function fromHash() {
+        var id = location.hash.slice(1);
+        if (panels.some(function (p) { return p.id === id; })) show(id, false, false);
+      }
+      window.addEventListener('hashchange', fromHash);
+      fromHash();
+    })();
+  </script>
+</body>
+</html>
